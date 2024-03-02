@@ -31,7 +31,6 @@ class _DashboardState extends State<Dashboard>
         if (status == AnimationStatus.completed) {
           setState(() {
             _animating = false;
-            count++;
           });
         }
       });
@@ -50,9 +49,10 @@ class _DashboardState extends State<Dashboard>
         _animating = true;
         _centerIndex = 4; // Center index is set to 4 after tapping
       });
-      _controller.forward(from: 0);
-      setState(() {
-        count++;
+      _controller.forward(from: 0).then((_) {
+        setState(() {
+          count++;
+        });
       });
     }
     // Calculate the index based on the tap position
@@ -161,6 +161,8 @@ class _DashboardState extends State<Dashboard>
               ),
             ],
           ),
+          iconTheme: IconThemeData(
+              color: Colors.black), // Change drawer icon color to black
         ),
         drawer: Drawer(
           child: ListView(
