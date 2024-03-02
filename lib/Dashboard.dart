@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'about_us_screen.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -64,6 +67,78 @@ class _DashboardState extends State<Dashboard>
     });
   }
 
+  // Launch the developer's website
+  void _launchWebsite() async {
+    const url = 'https://afnanafsal.vercel.app';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  // Method to show the rating dialog
+  void _showRatingPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        int selectedRating = 0;
+        return AlertDialog(
+          title: Text('Rate Us'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('How would you rate our app?'),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      5,
+                      (index) => IconButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedRating = index + 1;
+                          });
+                        },
+                        icon: Icon(
+                          index < selectedRating
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: Colors.amber,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, selectedRating);
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        );
+      },
+    ).then((rating) {
+      if (rating != null) {
+        print('User rated the app: $rating stars');
+        // You can handle the user's rating here
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -73,25 +148,64 @@ class _DashboardState extends State<Dashboard>
         appBar: AppBar(
           elevation: 0, // Remove shadow
           backgroundColor: Colors.white,
-          title: Text(
-            'Welcome User',
-            style: TextStyle(color: Colors.black),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Welcome User',
+                style: TextStyle(color: Colors.black),
+              ),
+              Text(
+                'Start to count',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ],
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: TextButton(
-                onPressed: () {},
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
                 child: Text(
-                  'Start to Count',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
+                  'Tasbeeh',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-            ),
-          ],
+              ListTile(
+                title: Text('About Us'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AboutUsScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Version : 1.0.0'),
+              ),
+              ListTile(
+                title: Text('Rate Us'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  _showRatingPopup(context); // Show the rating popup
+                },
+              ),
+              ListTile(
+                title: Text('Developer'),
+                onTap: () {
+                  _launchWebsite(); // Launch the developer's website
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+            ],
+          ),
         ),
         body: Center(
           child: Container(
@@ -184,6 +298,7 @@ class _DashboardState extends State<Dashboard>
             ),
           ),
         ),
+        // Implement PopupMenuButton for "Rate Us"
       ),
     );
   }
