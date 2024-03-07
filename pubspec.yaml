@@ -38,7 +38,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   confetti: ^0.7.0
   url_launcher: ^6.2.4
-  
+  flutter_custom_tabs: ^2.0.0+1
+  webview_flutter: ^4.1.0
+  flutter_inappwebview: ^5.3.2
 
 dev_dependencies:
   flutter_test:

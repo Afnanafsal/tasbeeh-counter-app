@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'about_us_screen.dart';
 
@@ -68,13 +68,16 @@ class _DashboardState extends State<Dashboard>
   }
 
   // Launch the developer's website
-  void _launchWebsite() async {
-    const url = 'https://afnanafsal.vercel.app';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  void _launchWebsite() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewPage(
+          url: 'https://afnanafsal.vercel.app',
+          title: 'Developer',
+        ),
+      ),
+    );
   }
 
   // Method to show the rating dialog
@@ -154,10 +157,6 @@ class _DashboardState extends State<Dashboard>
               Text(
                 'Welcome User',
                 style: TextStyle(color: Colors.black),
-              ),
-              Text(
-                'Start to count',
-                style: TextStyle(color: Colors.black, fontSize: 20),
               ),
             ],
           ),

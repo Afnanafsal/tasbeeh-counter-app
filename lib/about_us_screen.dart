@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class AboutUsScreen extends StatelessWidget {
   @override
@@ -79,7 +79,15 @@ class AboutUsScreen extends StatelessWidget {
             SizedBox(height: 10),
             InkWell(
               onTap: () {
-                _launchWebsite('https://afnanafsal.vercel.app');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WebViewPage(
+                      url: 'https://afnanafsal.vercel.app',
+                      title: 'Contact',
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'https://afnanafsal.vercel.app',
@@ -95,12 +103,24 @@ class AboutUsScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  void _launchWebsite(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+class WebViewPage extends StatelessWidget {
+  final String url;
+  final String title;
+
+  const WebViewPage({Key? key, required this.url, required this.title})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(url: Uri.parse(url)),
+      ),
+    );
   }
 }
